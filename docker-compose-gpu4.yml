@@ -1,0 +1,32 @@
+zookeeper:
+  image: mesoscloud/zookeeper:3.4.8-ubuntu-14.04
+  net: host
+  environment:
+     - MYID=1
+     - SERVERS=192.168.99.54
+
+master:
+  image: mesosphere/mesos-master:1.0.1-2.0.93.ubuntu1404
+  net: host
+  environment:
+    - MESOS_HOSTNAME=gpu4-master
+    - MESOS_IP=192.168.99.54   # 172.25.106.51
+    - MESOS_QUORUM=1
+    - MESOS_ZK=zk://localhost:2181/mesos
+
+slave:
+  build: mesos-slave
+  net: host
+  privileged: true
+  environment:
+    - MESOS_HOSTNAME=gpu4-slave
+    - MESOS_IP=192.168.99.54
+    - MESOS_PORT=5051
+    - MESOS_MASTER=zk://localhost:2181/mesos
+    - MESOS_CONTAINERIZERS=docker,mesos
+    - MESOS_WORK_DIR=/var/tmp/mesos
+    - MESOS_IMAGE_PROVIDERS=appc,docker 
+    - MESOS_ISOLATION=filesystem/linux,docker/runtime,cgroups/devices,gpu/nvidia
+  volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup
+    - /var/run/docker.sock:/var/run/docker.sock

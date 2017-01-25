@@ -1,0 +1,16 @@
+slave:
+  build: mesos-slave
+  net: host
+  privileged: true
+  environment:
+    - MESOS_HOSTNAME=gpu5-slave
+    - MESOS_IP=192.168.99.55
+    - MESOS_PORT=5051
+    - MESOS_MASTER=zk://192.168.99.54:2181/mesos
+    - MESOS_CONTAINERIZERS=docker,mesos
+    - MESOS_WORK_DIR=/var/tmp/mesos
+    - MESOS_IMAGE_PROVIDERS=appc,docker 
+    - MESOS_ISOLATION=filesystem/linux,docker/runtime
+  volumes:
+    - /sys/fs/cgroup:/sys/fs/cgroup
+    - /var/run/docker.sock:/var/run/docker.sock
