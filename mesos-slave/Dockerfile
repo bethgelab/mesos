@@ -13,4 +13,7 @@ RUN echo "deb http://repos.mesosphere.io/ubuntu/ trusty main" > /etc/apt/sources
 RUN apt-get -y --force-yes install mesos=1.1.0-2.0.107.ubuntu1404 && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /etc/apt/sources.list.d/docker.list
+RUN apt-get update && apt-get install -y --force-yes --no-install-recommends docker-engine=1.11.2-0~trusty curl
+
 ENTRYPOINT ["mesos-agent"]
